@@ -7,4 +7,6 @@ router.get('/test', controller.test);
 
 router.post('/add', controller.add);
 
+router.get('/getAll', controller.getAll);
+
 module.exports = router;
