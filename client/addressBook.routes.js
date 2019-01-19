@@ -9,4 +9,6 @@ router.post('/add', controller.add);
 
 router.get('/getAll', controller.getAll);
 
+router.put('/:id/update', controller.update);
+
 module.exports = router;
