@@ -11,8 +11,6 @@ exports.add = function (req, res) {
     phoneNumber: req.body.phoneNumber
   });
 
-  console.log(AddressBook)
-
   entry.save(err => {
     if (err) {
       return next(err);
@@ -20,12 +18,6 @@ exports.add = function (req, res) {
 
     res.send('Add success');
   });
-  /*    mock.addressBooks.push({
-          nick: req.body.nick,
-          phoneNumber: req.body.phoneNumber
-      });*/
-
-  //res.send(mock);
 }
 
 exports.getAll = function (req, res) {
@@ -34,8 +26,20 @@ exports.getAll = function (req, res) {
   });
 }
 
+exports.getUser = function (req, res) {
+  AddressBook.findById(req.params.id).then(function (user) {
+    res.send(user);
+  });
+}
+
 exports.update = function(req, res) {
   AddressBook.findOneAndUpdate(req.params.id, {$set: req.body}).then(function () {
     res.send('Address book udpated.');
+  });
+}
+
+exports.delete = function(req, res) {
+  AddressBook.findByIdAndRemove(req.params.id).then(function () {
+    res.send('Address book deleted.');
   });
 }
