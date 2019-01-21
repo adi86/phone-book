@@ -15,7 +15,7 @@
 import PhoneBookService from '../services/phone-book.service'
 
 export default {
-  name: "PhoneBookAdd",
+  name: 'PhoneBookAdd',
   data () {
     return {
       user: {
@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     addUser () {
-      PhoneBookService.addUser(this.user).then( resp => {
+      PhoneBookService.addUser(this.user).then(resp => {
         this.$router.go(-1)
       })
     },
@@ -49,7 +49,7 @@ export default {
         this.errors.push('Phone number required')
       }
 
-      return false;
+      return false
     }
   }
 }

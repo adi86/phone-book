@@ -8,6 +8,7 @@
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start:client": "nodemon ./client/app.js",
     "start": "npm run dev",
+    "start:all": "npm run dev | npm run start:client",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit",

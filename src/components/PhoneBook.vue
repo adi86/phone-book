@@ -96,7 +96,6 @@ export default {
   },
   computed: {
     sortedPhoneBook () {
-      let alphpabet = '*!@_.()#^&%-=+01234567989aąbcćdeęfghijklłmnoópqrsśtuvwxyzźż'
       return this.phoneBook.slice()
         .filter(item => {
           return item.nick.indexOf(this.searchText) >= 0 || item.phoneNumber.indexOf(this.searchText) >= 0
