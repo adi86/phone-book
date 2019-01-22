@@ -7,6 +7,8 @@ router.get('/test', controller.test);
 
 router.post('/add', controller.add);
 
+router.get('/addAll', controller.saveAll);
+
 router.get('/getAll', controller.getAll);
 
 router.get('/getUser/:id', controller.getUser);

@@ -1,119 +1,119 @@
 <template>
-  <div>
-    <router-link :to="{name: 'PhoneBookAdd'}">Add</router-link>
-    <div>
-      <label>Search: </label>
-      <input type="text" name="search" v-model="searchText"/>
-    </div>
-    <table class="table">
-      <thead>
-      <tr>
-        <th @click="setSort('nick')">Name</th>
-        <th @click="setSort('phoneNumber')">Phone</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="item in sortedPhoneBook" :key="item._id">
-        <td>{{item.nick}}</td>
-        <td>{{item.phoneNumber}}</td>
-        <td>
-          {{item._id}}
-          <div></div>
-          <button class="btn btn-lg" v-on:click="deleteItem(item._id)">
-            Delete
-          </button>
-          <button class="btn btn-lg">
-            <router-link :to="{ name: 'PhoneBookEdit', params: { id: item._id }}">Edit</router-link>
-          </button>
-        </td>
-      </tr>
-      <tr v-if="!this.sortedPhoneBook.length">
-        <td colspan="2">
-          No items
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <div class="pagination">
-      <button :disabled="shouldDisablePrevPageButton()" @click="prevPage">Previous Page</button>
-      <button :disabled="shouldDisableNextPageButton()" @click="nextPage">Next Page</button>
-    </div>
-  </div>
+  <b-container fluid>
+    <b-row>
+      <b-col sm="12" md="6" class="mb-2 d-lg-block d-xl-none d-block d-md-block">
+        <b-form-group horizontal label="Sort" class="mb-0">
+          <b-input-group>
+            <b-form-select v-model="sortBy" :options="sortSelectOptions">
+              <option slot="first" :value="null">-- none --</option>
+            </b-form-select>
+            <b-form-select :disabled="!sortBy" v-model="sortDesc" slot="append">
+              <option :value="false">Asc</option>
+              <option :value="true">Desc</option>
+            </b-form-select>
+          </b-input-group>
+        </b-form-group>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col md="6" sm="12">
+        <b-form-group horizontal label="Search">
+          <b-input-group>
+            <b-form-input v-model="searchText" placeholder="Type to search"/>
+          </b-input-group>
+        </b-form-group>
+      </b-col>
+      <b-col md="6" sm="12">
+        <router-link :to="{ name: 'PhoneBookAdd' }">Add Person</router-link>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col md="12">
+        <b-table
+          stripped
+          hover
+          stacked="md"
+          :items="phoneBook"
+          :fields="tableFields"
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+          :per-page="pageSize"
+          :current-page="currentPage"
+          :filter="searchText"
+          @filtered="onFilter"
+        >
+          <template slot="actions" slot-scope="row">
+            <b-button size="sm" @click.stop="deleteItem(row.item._id)" class="mr-1">
+              Delete
+            </b-button>
+            <b-button size="sm" @click.stop="goToEdit(row.item._id)">
+              Edit
+            </b-button>
+          </template>
+        </b-table>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col md="6" class="my-1">
+        <b-pagination
+          :total-rows="totalRows"
+          :per-page="pageSize"
+          v-model="currentPage"
+          class="my-0"
+        />
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 <script>
-import PhoneBookService from '../services/phone-book.service'
+import PhoneBookService from "../services/phone-book.service";
 
 export default {
-  name: 'PhoneBook',
+  name: "PhoneBook",
   data () {
     return {
       phoneBook: [],
-      sortName: 'nick',
-      sortDir: 'asc',
-      pageSize: 2,
+      sortBy: "name",
+      sortDesc: false,
+      pageSize: 10,
       currentPage: 1,
-      searchText: ''
-    }
+      searchText: "",
+      totalRows: 0,
+      tableFields: [
+        {key: "name", sortable: true},
+        {key: "surname", sortable: true},
+        {
+          key: "phone",
+          sortable: true
+        },
+        {key: "email", sortable: true},
+        {key: 'actions', label: 'Actions'}
+      ],
+      sortSelectOptions: ['name', 'surname', 'phone', 'email']
+    };
   },
   created () {
-    this.getAllItems()
+    this.getAllItems();
   },
   methods: {
     deleteItem (id) {
       PhoneBookService.deletePhone(id).then(() => {
-        this.getAllItems()
-      })
+        this.getAllItems();
+      });
     },
     getAllItems () {
       PhoneBookService.getPhoneBook().then(resp => {
-        this.phoneBook = resp
-      })
+        this.phoneBook = resp;
+      });
     },
-    setSort (newSort) {
-      if (newSort === this.sortName) {
-        this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc'
-      }
-
-      this.sortName = newSort
+    onFilter (itemsFiltered) {
+      this.currentPage = 1;
+      this.totalRows = itemsFiltered.length;
     },
-    nextPage () {
-      if ((this.currentPage * this.pageSize) < this.phoneBook.length) {
-        this.currentPage++
-      }
-    },
-    prevPage () {
-      if (this.currentPage > 1) {
-        this.currentPage--
-      }
-    },
-    shouldDisableNextPageButton () {
-      return (this.currentPage * this.pageSize) >= this.phoneBook.length
-    },
-    shouldDisablePrevPageButton () {
-      return this.currentPage === 1
-    }
-  },
-  computed: {
-    sortedPhoneBook () {
-      return this.phoneBook.slice()
-        .filter(item => {
-          return item.nick.indexOf(this.searchText) >= 0 || item.phoneNumber.indexOf(this.searchText) >= 0
-        })
-        .sort((a, b) => {
-          let modifier = 1
-          if (this.sortDir === 'desc') modifier = -1
-          if (a[this.sortName] < b[this.sortName]) return -1 * modifier
-          if (a[this.sortName] > b[this.sortName]) return 1 * modifier
-          return 0
-        }).filter((row, index) => {
-          let start = (this.currentPage - 1) * this.pageSize
-          let end = this.currentPage * this.pageSize
-          if (index >= start && index < end) {
-            return true
-          }
-        })
+    goToEdit(id) {
+      console.log(id);
+      this.$router.push({name: 'PhoneBookEdit', params: {id: id}})
     }
   }
-}
+};
 </script>
