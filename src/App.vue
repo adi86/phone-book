@@ -1,12 +1,25 @@
 <template>
-  <div id="app">
-    <router-view/>
+  <div>
+    <b-form-select v-model="themeClass" :options="themes"></b-form-select>
+    <div id="app" v-bind:class="[themeClass]">
+      <router-view/>
+    </div>
   </div>
 </template>
 
 <script>
+
 export default {
-  name: 'App'
+  name: 'App',
+  data () {
+    return {
+      themeClass: '',
+      themes: ['black', 'green']
+    }
+  },
+  created () {
+
+  }
 }
 </script>
 
@@ -18,5 +31,12 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.black{
+  background: black;
+}
+
+.green{
+  background: green;
 }
 </style>

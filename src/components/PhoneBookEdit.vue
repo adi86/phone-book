@@ -31,8 +31,8 @@
 </template>
 <script>
 import PhoneBookService from '../services/phone-book.service'
-import { required, email, alpha } from "vuelidate/lib/validators";
-import {phoneValidator} from "../common/validators"
+import { required, email, alpha } from 'vuelidate/lib/validators'
+import {phoneValidator} from '../common/validators'
 
 export default {
   name: 'PhoneBookEdit',
@@ -85,11 +85,11 @@ export default {
 
     validateForm (e) {
       if (!this.$v.$invalid) {
-        this.updateUser();
-        return true;
+        this.updateUser()
+        return true
       }
 
-      return false;
+      return false
     }
   }
 }

@@ -66,54 +66,54 @@
   </b-container>
 </template>
 <script>
-import PhoneBookService from "../services/phone-book.service";
+import PhoneBookService from '../services/phone-book.service'
 
 export default {
-  name: "PhoneBook",
+  name: 'PhoneBook',
   data () {
     return {
       phoneBook: [],
-      sortBy: "name",
+      sortBy: 'name',
       sortDesc: false,
       pageSize: 10,
       currentPage: 1,
-      searchText: "",
+      searchText: '',
       totalRows: 0,
       tableFields: [
-        {key: "name", sortable: true},
-        {key: "surname", sortable: true},
+        {key: 'name', sortable: true},
+        {key: 'surname', sortable: true},
         {
-          key: "phone",
+          key: 'phone',
           sortable: true
         },
-        {key: "email", sortable: true},
+        {key: 'email', sortable: true},
         {key: 'actions', label: 'Actions'}
       ],
       sortSelectOptions: ['name', 'surname', 'phone', 'email']
-    };
+    }
   },
   created () {
-    this.getAllItems();
+    this.getAllItems()
   },
   methods: {
     deleteItem (id) {
       PhoneBookService.deletePhone(id).then(() => {
-        this.getAllItems();
-      });
+        this.getAllItems()
+      })
     },
     getAllItems () {
       PhoneBookService.getPhoneBook().then(resp => {
-        this.phoneBook = resp;
-      });
+        this.phoneBook = resp
+      })
     },
     onFilter (itemsFiltered) {
-      this.currentPage = 1;
-      this.totalRows = itemsFiltered.length;
+      this.currentPage = 1
+      this.totalRows = itemsFiltered.length
     },
-    goToEdit(id) {
-      console.log(id);
+    goToEdit (id) {
+      console.log(id)
       this.$router.push({name: 'PhoneBookEdit', params: {id: id}})
     }
   }
-};
+}
 </script>

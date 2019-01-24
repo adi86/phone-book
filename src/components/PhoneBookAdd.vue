@@ -31,13 +31,13 @@
 </template>
 
 <script>
-import PhoneBookService from "../services/phone-book.service";
-import { required, email, alpha } from "vuelidate/lib/validators";
-import {phoneValidator} from "../common/validators"
+import PhoneBookService from '../services/phone-book.service'
+import {required, email, alpha} from 'vuelidate/lib/validators'
+import {phoneValidator} from '../common/validators'
 
 export default {
-  name: "PhoneBookAdd",
-  data() {
+  name: 'PhoneBookAdd',
+  data () {
     return {
       user: {
         name: '',
@@ -45,7 +45,7 @@ export default {
         email: '',
         surname: ''
       }
-    };
+    }
   },
   validations: {
     user: {
@@ -68,22 +68,22 @@ export default {
     }
   },
   methods: {
-    addUser() {
+    addUser () {
       PhoneBookService.addUser(this.user).then(resp => {
-        this.$router.go(-1);
-      });
+        this.$router.go(-1)
+      })
     },
 
-    validateForm() {
+    validateForm () {
       if (!this.$v.$invalid) {
-        this.addUser();
-        return true;
+        this.addUser()
+        return true
       }
 
-      return false;
+      return false
     }
   }
-};
+}
 </script>
 
 <style scoped></style>
